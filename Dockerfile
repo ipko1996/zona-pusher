@@ -2,6 +2,9 @@ FROM alpine:latest
 
 COPY script.sh /script.sh
 
+# Make the script executable
+RUN chmod +x /script.sh
+
 # Install packages
 RUN apk add --no-cache bash curl jq
 
