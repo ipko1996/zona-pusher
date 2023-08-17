@@ -31,15 +31,28 @@ if [ -n "$json_data" ]; then
     current_date=$(date +"%m.%d")
 
     text="($current_date) $day_of_week $random_food_emoji\n\n"
-    filtered_data=$(echo "$json_data" | jq -cj ".[\"$day_of_week\"][]")
-    foods_prices=$(echo "$json_data" | jq --arg day "$day_of_week" -r '.[$day]')
+
+    zona_data=$(echo "$json_data" | jq '.["ZONA"]')
+    foods_prices=$(echo "$zona_data" | jq --arg day "$day_of_week" -r '.[$day]')
 
     output=""
     while IFS= read -r line; do
         output+="$line\n\n"
     done <<< "$(echo "$foods_prices" | jq -r '.[] | .food + "  -  " + (.price|tostring)')"
+    text+="ZONA:\n\n"
 
     text+=$output
+
+    text+="METISZ:\n\n"
+    output=""
+    metisz_data=$(echo "$json_data" | jq '.["METISZ"]')
+    foods_prices=$(echo "$metisz_data" | jq --arg day "$day_of_week" -r '.[$day]')
+    while IFS= read -r line; do
+        output+="$line\n\n"
+    done <<< "$(echo "$foods_prices" | jq -r '.[] | .food + "  -  " + (.price|tostring)')"
+    text+=$output
+
+
     echo -e $text
 
     json_data="{\"text\": \"$text\"}"
