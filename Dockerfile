@@ -13,3 +13,4 @@ RUN echo "0 8 * * 1-5 /bin/bash /script.sh >> /var/log/cron.log 2>&1" | crontab 
 
 # Start cron in the foreground
 CMD ["crond", "-f"]
+
